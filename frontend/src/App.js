@@ -1,27 +1,30 @@
-// frontend/src/App.js
 import React, { useState } from 'react';
+import icon from './assets/White-Logo.png';  
 import './App.css';
+import WelcomeModal from './components/WelcomeM';
 
 function App() {
-  const [input, setInput] = useState('');
-  const [result, setResult] = useState('');
-
-  const handlePredict = async () => {
-    const res = await fetch('http://localhost:5000/predict', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ input }),
-    });
-    const data = await res.json();
-    setResult(data.result);
-  };
+  const [showModal, setShowModal] = useState(true);
 
   return (
     <div className="App">
-      <h1>🧦 CozyFeet Predictor</h1>
-      <input value={input} onChange={(e) => setInput(e.target.value)} />
-      <button onClick={handlePredict}>Predict</button>
-      <p>{result}</p>
+      <nav className="navbar">
+        <div className="navbar-logo">
+          <img src={icon} alt="Logo" />
+          <span>Lofu</span>
+        </div>
+        <ul className="navbar-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">About</a></li>
+        </ul>
+      </nav>
+
+      {showModal && <WelcomeModal onClose={() => setShowModal(false)} />}
+
+      <div className="app-container">
+        <h1>Welcome to My React App</h1>
+      </div>
     </div>
   );
 }
