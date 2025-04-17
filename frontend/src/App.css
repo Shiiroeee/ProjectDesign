@@ -70,3 +70,32 @@ video {
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
+.center-button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+/* Main Body Configuration*/
+.main-body-vertical {
+  display: flex;
+  height: calc(100vh - 60px); /* Adjust depending on navbar height */
+}
+
+.left-section {
+  flex: 0.3; /* 30% of the width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 2px solid #444;
+  padding: 1rem;
+}
+
+.right-section {
+  flex: 0.7; /* 70% of the width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}

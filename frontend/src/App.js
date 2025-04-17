@@ -1,36 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import icon from './assets/White-Logo.png';  
 import './App.css';
 import WelcomeModal from './components/WelcomeM';
+import MainButton from './components/MainButton';
 
 function App() {
   const [showModal, setShowModal] = useState(true);
-  const videoRef = useRef(null); // To reference the video element
-
-  useEffect(() => {
-    // Request camera access
-    const startCamera = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      } catch (err) {
-        console.error("Error accessing the camera", err);
-      }
-    };
-
-    startCamera();
-
-    // Cleanup: stop all video tracks when the component unmounts
-    return () => {
-      const stream = videoRef.current?.srcObject;
-      const tracks = stream?.getTracks();
-      tracks?.forEach((track) => track.stop());
-    };
-  }, []);
 
   return (
     <div className="App">
@@ -48,6 +23,18 @@ function App() {
 
       {showModal && <WelcomeModal onClose={() => setShowModal(false)} />}
 
+      <div className="main-body-vertical">
+        <div className="left-section">
+          {/* Place content like camera here */}
+          <h2>Left Side</h2>
+        </div>
+        <div className="right-section">
+          {/* Place content like button or results here */}
+          <MainButton onClick={() => console.log('Main button clicked!')}>
+            Capture
+          </MainButton>
+        </div>
+      </div>
     </div>
   );
 }

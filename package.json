@@ -1,5 +1,6 @@
 {
-  "name": "cozyfeet-app",
+  "name": "Lofu-app",
+  "productName": "Lofu",
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
