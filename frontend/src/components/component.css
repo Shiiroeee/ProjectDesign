@@ -41,6 +41,13 @@
   
   /* Welcome Button */
 
+  .button-container-right {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+  
   .custom-btn {
     padding: 10px 20px;
     background-color: #2c5c8d;
@@ -50,6 +57,7 @@
     font-size: 16px;
     cursor: pointer;
     transition: background 0.3s ease;
+    
   }
   
   .custom-btn.clicked {

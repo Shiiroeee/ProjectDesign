@@ -86,16 +86,98 @@ video {
 .left-section {
   flex: 0.3; /* 30% of the width */
   display: flex;
-  justify-content: center;
-  align-items: center;
-  border-right: 2px solid #444;
-  padding: 1rem;
+  flex-direction: column;
+  padding: 40px;
+  gap: 5px;
 }
 
 .right-section {
   flex: 0.7; /* 70% of the width */
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  padding: 1rem;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.camera-feed {
+  width: 800px;
+  height: 700px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 2px solid #444;
+}
+
+.camera-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.camera-toggle-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.camera-toggle-btn:hover {
+  background-color: #0056b3;
+}
+
+.image-slot {
+  position: relative;
+  flex: 1;
+  border: 2px solid white;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-slot img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  width: 24px;
+  height: 24px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.placeholder {
+  color: #aaa;
+  font-size: 1rem;
+}
+
+/* Gradient Toggle Button */
+.gradient-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  background-image: linear-gradient(135deg, #9ac6f5, #007bff, #000000);
+  transition: all 0.3s ease;
+}
+
+.gradient-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
 }

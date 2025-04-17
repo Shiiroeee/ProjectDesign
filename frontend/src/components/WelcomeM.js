@@ -39,8 +39,10 @@ const WelcomeModal = ({ onClose }) => {
              before and after using custom insoles can help determine if they provide 
              proper support. </p>
 
-        {/* Replace default button with custom one */}
-        <CustomButton label="Enter" onClick={handleClose} />
+        <div className="button-container-right">
+         <CustomButton label="Enter" onClick={handleClose} />
+        </div>
+
       </div>
     </div>
   );
