@@ -6,8 +6,6 @@ import WelcomeModal from './components/WelcomeM';
 function App() {
   const [showModal, setShowModal] = useState(true);
   const videoRef = useRef(null); // To reference the video element
-  const canvasRef = useRef(null); // To reference the canvas for capturing the image
-  const [capturedImage, setCapturedImage] = useState(null); // To store captured image as base64
 
   useEffect(() => {
     // Request camera access
@@ -34,24 +32,6 @@ function App() {
     };
   }, []);
 
-  // Function to capture the image from video
-  const captureImage = () => {
-    const video = videoRef.current;
-    const canvas = canvasRef.current;
-
-    if (video && canvas) {
-      const context = canvas.getContext('2d');
-      // Set the canvas size to the video frame size
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      // Draw the current video frame on the canvas
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      // Get the image data URL (base64 encoded)
-      const imageUrl = canvas.toDataURL('image/png');
-      setCapturedImage(imageUrl); // Store the captured image
-    }
-  };
-
   return (
     <div className="App">
       <nav className="navbar">
@@ -68,31 +48,6 @@ function App() {
 
       {showModal && <WelcomeModal onClose={() => setShowModal(false)} />}
 
-      <div className="app-container">
-        {/* Video element for camera feed */}
-        <video 
-          ref={videoRef} 
-          autoPlay 
-          muted 
-          style={{ width: '100%', height: 'auto' }}
-        ></video>
-
-        {/* Button to capture image */}
-        <button onClick={captureImage} className="capture-button">
-          Capture
-        </button>
-
-        {/* Display the captured image */}
-        {capturedImage && (
-          <div className="captured-image-container">
-            <h3>Captured Image:</h3>
-            <img src={capturedImage} alt="Captured" style={{ width: '100%', height: 'auto' }} />
-          </div>
-        )}
-        
-        {/* Canvas for capturing the image */}
-        <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
-      </div>
     </div>
   );
 }
