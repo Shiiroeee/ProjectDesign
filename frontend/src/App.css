@@ -1,3 +1,4 @@
+/* General Body Styling */
 body {
   margin: 0;
   padding: 0;
@@ -8,6 +9,7 @@ body {
   overflow: hidden;
 } 
 
+/* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -51,82 +53,61 @@ body {
   color: #00bcd4;
 }
 
-.app-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh; 
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: for a soft shadow around the container */
-}
-
-video {
-  max-width: 100%;  
-  max-height: 100%; 
-  object-fit: cover; 
-  border-radius: 8px;
-  border: 2px solid #fffefe;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-}
-
-.center-button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 60vh;
-}
-
-/* Main Body Configuration*/
+/* Main Body Layout */
 .main-body-vertical {
   display: flex;
   height: calc(100vh - 60px); /* Adjust depending on navbar height */
 }
 
 .left-section {
-  flex: 0.3; /* 30% of the width */
+  flex: 0.3;
   display: flex;
   flex-direction: column;
-  padding: 40px;
-  gap: 5px;
+  padding: 50px;
+  gap: 10px;
 }
 
 .right-section {
-  flex: 0.7; /* 70% of the width */
+  flex: 0.7;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Stack camera feed and buttons vertically */
   align-items: center;
+  justify-content: flex-start;
+  padding: 20px;
+  gap: 15px;
+  overflow-y: auto;
+}
+
+/* Camera Feed */
+.camera-container {
+  display: flex;
   justify-content: center;
-  gap: 1rem;
+  align-items: center;
+  width: 100%;
+  height: 100%; /* Ensures camera feed fits within container */
+  flex: 1;
+  flex-direction: column;
 }
 
 .camera-feed {
-  width: 800px;
-  height: 700px;
+  width: 100%;
+  height: auto;
+  max-height: 60vh; /* Limit height to 60% of the viewport height */
+  object-fit: contain;
   border-radius: 10px;
-  object-fit: cover;
   border: 2px solid #444;
 }
 
-.camera-container {
-  text-align: center;
-  margin-top: 20px;
+.camera-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+  width: 100%;
+  flex-shrink: 0;
 }
 
-.camera-toggle-btn {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.camera-toggle-btn:hover {
-  background-color: #0056b3;
-}
-
+/* Image Slots */
 .image-slot {
   position: relative;
   flex: 1;
@@ -159,12 +140,13 @@ video {
   cursor: pointer;
 }
 
+/* Placeholder text */
 .placeholder {
   color: #aaa;
   font-size: 1rem;
 }
 
-/* Gradient Toggle Button */
+/* Gradient Button Styling */
 .gradient-btn {
   padding: 10px 20px;
   border: none;
@@ -173,7 +155,7 @@ video {
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  background-image: linear-gradient(135deg, #9ac6f5, #007bff, #000000);
+  background-image: linear-gradient(135deg, #000000, #007bff, #9ac6f5);
   transition: all 0.3s ease;
 }
 
