@@ -69,7 +69,7 @@
   .gradient-btn {
     padding: 10px 20px;
     border: none;
-    border-radius: 25px;
+    border-radius: 10px;
     color: white;
     font-size: 16px;
     font-weight: bold;
@@ -82,3 +82,30 @@
     transform: scale(1.05);
     box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
   } 
+
+  /*Title Bar*/
+
+  .custom-title-bar {
+    height: 30px;
+    background: #1f1f1f;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    -webkit-app-region: drag; /* Allows window dragging */
+  }
+  
+  .window-controls button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    -webkit-app-region: no-drag; /* Prevent buttons from being draggable */
+  }
+  
+  .window-controls button:hover {
+    background-color: #444;
+  }
+  
