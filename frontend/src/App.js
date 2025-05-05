@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect, useRef } from 'react';
 import icon from './assets/White-Logo.png';
 import './App.css';
@@ -47,45 +46,43 @@ function App() {
     };
   }, [isCameraActive]);
 
-  // Handle capture
-  const handleCapture = () => {
-    const video = videoRef.current;
-    const canvas = captureCanvasRef.current;
-    if (video && canvas && video.videoWidth && video.videoHeight) {
-      const ctx = canvas.getContext('2d');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const imageData = canvas.toDataURL('image/png');
-      setCapturedImages((prev) => [...prev, imageData].slice(-3));
-    }
-  };
+  // Automatic detection when camera is active
+  useEffect(() => {
+    let intervalId;
 
-  // Handle detect
-  const handleDetect = async () => {
-    const video = videoRef.current;
-    const canvas = captureCanvasRef.current;
-    if (video && canvas && video.videoWidth && video.videoHeight) {
-      const ctx = canvas.getContext('2d');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const imageData = canvas.toDataURL('image/png');
+    const detect = async () => {
+      const video = videoRef.current;
+      const canvas = captureCanvasRef.current;
+      if (video && canvas && video.videoWidth && video.videoHeight) {
+        const ctx = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = canvas.toDataURL('image/png');
 
-      try {
-        const res = await fetch('http://127.0.0.1:5000/detect', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image: imageData }),
-        });
-        if (!res.ok) throw new Error('Server error');
-        const boxes = await res.json();
-        setDetections(boxes);
-      } catch (err) {
-        console.error('Detection error', err);
+        try {
+          const res = await fetch('http://127.0.0.1:5000/detect', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: imageData }),
+          });
+          if (!res.ok) throw new Error('Server error');
+          const boxes = await res.json();
+          setDetections(boxes);
+        } catch (err) {
+          console.error('Detection error', err);
+        }
       }
+    };
+
+    if (isCameraActive) {
+      intervalId = setInterval(detect, 1000); // Detect every second
     }
-  };
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isCameraActive]);
 
   // Draw detections
   useEffect(() => {
@@ -109,6 +106,19 @@ function App() {
       });
     }
   }, [detections]);
+
+  const handleCapture = () => {
+    const video = videoRef.current;
+    const canvas = captureCanvasRef.current;
+    if (video && canvas && video.videoWidth && video.videoHeight) {
+      const ctx = canvas.getContext('2d');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = canvas.toDataURL('image/png');
+      setCapturedImages((prev) => [...prev, imageData].slice(-3));
+    }
+  };
 
   const handleDelete = (i) => {
     setCapturedImages((prev) => prev.filter((_, idx) => idx !== i));
@@ -175,7 +185,6 @@ function App() {
 
             <div className="camera-buttons">
               <MainButton onClick={handleCapture}>Capture</MainButton>
-              <MainButton onClick={handleDetect}>Detect</MainButton>
               <button
                 onClick={() => setIsCameraActive(!isCameraActive)}
                 className="gradient-btn"
