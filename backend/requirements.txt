@@ -1,3 +1,6 @@
 flask
 ultralytics      # gives you YOLO loader + inference
 Pillow           # for image decoding
+numpy
+flask-cors
+tensorflow

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import icon from './assets/White-Logo.png';
 import './App.css';
 import WelcomeModal from './components/WelcomeM';
@@ -6,122 +7,91 @@ import MainButton from './components/MainButton';
 
 function App() {
   const [showModal, setShowModal] = useState(true);
-  const [isCameraActive, setIsCameraActive] = useState(false);
+  const [capturedImage, setCapturedImage] = useState(null);
   const videoRef = useRef(null);
   const captureCanvasRef = useRef(null);
-  const overlayRef = useRef(null);
-  const [capturedImages, setCapturedImages] = useState([]);
-  const [detections, setDetections] = useState([]);
 
-  // Start/stop camera
   useEffect(() => {
     let stream;
-
-    const startCamera = async () => {
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-        }
-      } catch (err) {
-        console.error('Error accessing camera', err);
-      }
-    };
-
-    const stopCamera = () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
-        videoRef.current.srcObject = null;
-      }
-    };
-
-    if (isCameraActive) {
-      startCamera();
-    } else {
-      stopCamera();
-    }
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((s) => {
+        stream = s;
+        videoRef.current.srcObject = stream;
+      })
+      .catch((err) => console.error('Camera error:', err));
 
     return () => {
-      stopCamera();
-    };
-  }, [isCameraActive]);
-
-  // Automatic detection when camera is active
-  useEffect(() => {
-    let intervalId;
-
-    const detect = async () => {
-      const video = videoRef.current;
-      const canvas = captureCanvasRef.current;
-      if (video && canvas && video.videoWidth && video.videoHeight) {
-        const ctx = canvas.getContext('2d');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageData = canvas.toDataURL('image/png');
-
-        try {
-          const res = await fetch('http://127.0.0.1:5000/detect', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: imageData }),
-          });
-          if (!res.ok) throw new Error('Server error');
-          const boxes = await res.json();
-          setDetections(boxes);
-        } catch (err) {
-          console.error('Detection error', err);
-        }
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
       }
     };
-
-    if (isCameraActive) {
-      intervalId = setInterval(detect, 1000); // Detect every second
-    }
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [isCameraActive]);
-
-  // Draw detections
-  useEffect(() => {
-    const canvas = overlayRef.current;
-    const ctx = canvas?.getContext('2d');
-    const video = videoRef.current;
-
-    if (canvas && ctx && video && video.videoWidth && video.videoHeight) {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = 'lime';
-      ctx.lineWidth = 2;
-      ctx.font = '16px sans-serif';
-      ctx.fillStyle = 'lime';
-
-      detections.forEach((d) => {
-        const { x1, y1, x2, y2, class: cls, confidence } = d;
-        ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
-        ctx.fillText(`${cls} ${(confidence * 100).toFixed(1)}%`, x1, y1 - 4);
-      });
-    }
-  }, [detections]);
+  }, []);
 
   const handleCapture = () => {
     const video = videoRef.current;
+    if (!video || !video.videoWidth || !video.videoHeight) return;
+
     const canvas = captureCanvasRef.current;
-    if (video && canvas && video.videoWidth && video.videoHeight) {
-      const ctx = canvas.getContext('2d');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const imageData = canvas.toDataURL('image/png');
-      setCapturedImages((prev) => [...prev, imageData].slice(-3));
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const dataURL = canvas.toDataURL('image/png');
+    setCapturedImage(dataURL);
+  };
+
+  const handleDetect = async () => {
+    if (!capturedImage) {
+      alert('Please capture an image first.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/detect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: capturedImage })
+      });
+
+      const detections = await response.json();
+
+      if (!Array.isArray(detections)) {
+        alert('Detection failed or returned no valid response.');
+        return;
+      }
+
+      drawBoundingBoxes(detections);
+    } catch (error) {
+      console.error('Detection error:', error);
+      alert('Detection failed.');
     }
   };
 
-  const handleDelete = (i) => {
-    setCapturedImages((prev) => prev.filter((_, idx) => idx !== i));
+  const drawBoundingBoxes = (boxes) => {
+    const canvas = captureCanvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    const image = new Image();
+    image.onload = () => {
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = 'red';
+      ctx.lineWidth = 2;
+      ctx.font = '16px Arial';
+      ctx.fillStyle = 'red';
+
+      boxes.forEach(box => {
+        const { x1, y1, x2, y2, class: className } = box;
+        ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+        ctx.fillText(className, x1, y1 - 5);
+      });
+
+      const updatedImage = canvas.toDataURL('image/png');
+      setCapturedImage(updatedImage);
+    };
+    image.src = capturedImage;
   };
 
   return (
@@ -132,65 +102,35 @@ function App() {
           <span>Lofu</span>
         </div>
         <ul className="navbar-links">
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Result</a></li>
-          <li><a href="#">Recommended</a></li>
-          <li><a href="#">Information</a></li>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/result">Result</Link></li>
+          <li><Link to="/recommended">Recommended</Link></li>
+          <li><Link to="/information">Information</Link></li>
         </ul>
       </nav>
 
       {showModal && <WelcomeModal onClose={() => setShowModal(false)} />}
 
       <div className="main-body-vertical">
+        {/* Left: Canvas with Bounding Boxes */}
         <div className="left-section">
-          {[0, 1].map((i) => (
-            <div className="image-slot" key={i}>
-              {capturedImages[i] ? (
-                <>
-                  <img src={capturedImages[i]} alt={`Capture ${i + 1}`} />
-                  <button className="delete-btn" onClick={() => handleDelete(i)}>✖</button>
-                </>
-              ) : (
-                <span className="placeholder">Empty Slot</span>
-              )}
-            </div>
-          ))}
+          {capturedImage ? (
+            <canvas ref={captureCanvasRef} className="full-capture-img" />
+          ) : (
+            <span className="placeholder">No image captured</span>
+          )}
+          <div style={{ marginTop: '20px' }}>
+            <MainButton onClick={handleDetect}>Detect</MainButton>
+          </div>
         </div>
 
+        {/* Right: Live Camera */}
         <div className="right-section">
           <div className="camera-container">
-            {isCameraActive ? (
-              <div className="video-wrapper">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  muted
-                  className="camera-feed"
-                  onLoadedMetadata={() => {
-                    const canvas = overlayRef.current;
-                    const video = videoRef.current;
-                    if (canvas && video) {
-                      canvas.width = video.videoWidth;
-                      canvas.height = video.videoHeight;
-                    }
-                  }}
-                />
-                <canvas ref={overlayRef} className="overlay-canvas" />
-              </div>
-            ) : (
-              <p>Camera is off</p>
-            )}
-
+            <video ref={videoRef} autoPlay muted className="camera-feed" />
             <canvas ref={captureCanvasRef} style={{ display: 'none' }} />
-
             <div className="camera-buttons">
               <MainButton onClick={handleCapture}>Capture</MainButton>
-              <button
-                onClick={() => setIsCameraActive(!isCameraActive)}
-                className="gradient-btn"
-              >
-                {isCameraActive ? 'Stop Camera' : 'Start Camera'}
-              </button>
             </div>
           </div>
         </div>
