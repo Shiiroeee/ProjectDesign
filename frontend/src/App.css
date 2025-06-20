@@ -226,8 +226,8 @@ body {
 }
 
 .image-box {
-  width: 180px;
-  height: 135px;
+  width: 350px;
+  height: 640px;
   border: 2px dashed #ffffff66;
   background-color: #111;
   display: flex;

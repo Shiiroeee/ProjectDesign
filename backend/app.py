@@ -40,8 +40,8 @@ def detect():
             return jsonify({'error': 'No image provided'}), 400
 
         image = decode_base64_image(data['image'])
-
         results = detector(image)[0]
+
         if not results or results.boxes is None:
             return jsonify([])
 
@@ -52,13 +52,23 @@ def detect():
             confidence = float(box.conf[0]) if box.conf is not None else 0.0
             class_name = detector.names.get(class_id, f"class_{class_id}")
 
+            # Crop the detected region
+            cropped = image.crop((x1, y1, x2, y2))
+
+            # Convert cropped image to base64
+            buffered = io.BytesIO()
+            cropped.save(buffered, format="PNG")
+            cropped_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
+            cropped_data_url = f"data:image/png;base64,{cropped_base64}"
+
             detections.append({
                 'x1': x1,
                 'y1': y1,
                 'x2': x2,
                 'y2': y2,
                 'class': class_name,
-                'confidence': confidence
+                'confidence': confidence,
+                'cropped_image': cropped_data_url  # 🚀 Important
             })
 
         return jsonify(detections)

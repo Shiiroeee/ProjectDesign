@@ -14,14 +14,10 @@ function ResultPage() {
 
   const formatArchLabel = (label) => {
     switch (label) {
-      case 'Flat':
-        return 'Flat Arch';
-      case 'Normal':
-        return 'Normal Arch';
-      case 'High':
-        return 'High Arch';
-      default:
-        return label;
+      case 'Flat': return 'Flat Arch';
+      case 'Normal': return 'Normal Arch';
+      case 'High': return 'High Arch';
+      default: return label;
     }
   };
 
@@ -32,12 +28,8 @@ function ResultPage() {
           <img src={icon} alt="Logo" />
           <span>Lofu</span>
         </div>
-
-        {/* Move the classification result header here */}
         <div className="navbar-title">
-          <h3>Classification Results</h3>
         </div>
-
         <ul className="navbar-links">
           <li><Link to="/">Home</Link></li>
           <li><Link to="/result">Result</Link></li>
@@ -46,7 +38,7 @@ function ResultPage() {
         </ul>
       </nav>
 
-      <div className="result-body">
+      <div className="result-body centered">
         {images.map((img, index) => (
           <div className="result-card" key={index}>
             <img src={img} alt={`Result ${index}`} className="result-image" />

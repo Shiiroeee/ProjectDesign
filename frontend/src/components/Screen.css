@@ -29,31 +29,31 @@
     justify-content: center;
     border: 2px dashed #888;
     border-radius: 8px;
-    text-align: center; /* Ensures text inside is centered */
+    text-align: center;
 }
 
 /* Placeholder Text Styling */
 .placeholder {
     color: #aaa;
     font-size: 1rem;
-    margin: 0; /* Remove any margin for centering */
+    margin: 0;
 }
 
 /* Centering the Image Slots in a Horizontal Row */
 .result-content {
-    display: flex;            /* Use flexbox for horizontal arrangement */
-    justify-content: center;  /* Center horizontally */
-    align-items: center;      /* Center vertically */
-    gap: 20px;                /* Add space between the image slots */
-    margin-top: 100px;         /* Add some space at the top to move slots down */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 100px;
 }
 
 .slot-row {
-    display: flex;            /* Arrange the image slots in a row */
-    justify-content: center;  /* Center the items in the row */
-    align-items: center;      /* Vertically center the items */
-    gap: 20px;                /* Add spacing between the slots */
-    margin-top: 20px;         /* Optional: add some margin to move slots down more */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
 }
 
 /* Return Home Button */
@@ -79,9 +79,59 @@
 }
 
 .navbar-title {
-  flex-grow: 1;      /* Take remaining space */
-  text-align: center;
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
+    flex-grow: 1;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.result-body.centered {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding-top: 40px;
+    gap: 30px;
+}
+
+.result-card {
+    display: flex;
+    flex-direction: column; /* Stack vertically */
+    align-items: center;    /* Center contents horizontally */
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.result-image {
+    max-width: 500px;
+    max-height: 500px;
+    margin-bottom: 20px; /* Space below the image */
+}
+
+.prediction-details {
+    text-align: center;
+}
+
+.prediction-details h3 span {
+    font-weight: bold;
+    color: #0074cc;
+}
+
+.result-actions {
+    margin-top: 10px;
+}
+
+/* Responsive: Stack image and text on small screens */
+@media (max-width: 600px) {
+    .result-card {
+        flex-direction: column;
+    }
+
+    .result-image {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
 }
