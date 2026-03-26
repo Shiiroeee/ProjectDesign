@@ -1,0 +1,53 @@
+# ======================
+# Python Virtual Environments
+# ======================
+.venv/
+venv/
+backend/.venv/
+**/venv/
+**/.venv/
+
+# ======================
+# Python Cache
+# ======================
+__pycache__/
+**/__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# ======================
+# Node / React Native
+# ======================
+node_modules/
+*.expo/
+
+# ======================
+# ML / CV artifacts
+# ======================
+*.h5
+*.onnx
+*.pkl
+*.tflite
+
+# Model output / runs
+runs/
+outputs/
+checkpoints/
+logs/
+wandb/
+
+# ======================
+# Data (datasets should NOT go into git)
+# ======================
+datasets/
+captured/
+captures/
+backend/Image/
+
+# ======================
+# OS / Editor
+# ======================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

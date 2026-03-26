@@ -1,0 +1,18 @@
+[
+  {
+    "origin": ["http://localhost:3000", "http://127.0.0.1:3000"],
+    "method": ["GET", "HEAD", "PUT", "POST", "DELETE", "OPTIONS"],
+    "responseHeader": [
+      "Content-Type",
+      "x-goog-meta-*",
+      "x-goog-upload-protocol",
+      "x-goog-upload-command",
+      "x-goog-upload-offset",
+      "x-goog-upload-header-content-length",
+      "x-goog-upload-header-content-type",
+      "X-Requested-With",
+      "x-firebase-gmpid"
+    ],
+    "maxAgeSeconds": 3600
+  }
+]
